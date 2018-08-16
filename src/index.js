@@ -124,7 +124,7 @@ class GIFParser {
   }
 }
 
-export default (url) => {
+module.exports = (url) => {
   const parser = new GIFParser(url)
   return parser.parse()
 }

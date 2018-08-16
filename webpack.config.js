@@ -1,5 +1,13 @@
+const path = require('path')
+
 module.exports = {
   devtool: 'source-map',
+  entry: './src/index.js',
+  output: {
+    library: 'extractGifFrames',
+    libraryTarget: 'umd',
+    path: path.resolve('index.js')
+  },
   module: {
     rules: [
       {
