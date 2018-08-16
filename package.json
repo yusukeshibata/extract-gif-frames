@@ -1,7 +1,7 @@
 {
-  "name": "libgif",
-  "version": "1.0.0",
-  "description": "Forked from the excelent jsgif project (https://github.com/shachaf/jsgif), which was implemented as a bookmarklet to manipulate animated gifs (http://slbkbs.org/jsgif).",
+  "name": "extract-gif-frames",
+  "version": "1.0.1",
+  "description": "extract gif frames using the excelent jsgif lib(https://github.com/buzzfeed/jsgif)",
   "main": "lib/index.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "babel src --out-dir lib",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
