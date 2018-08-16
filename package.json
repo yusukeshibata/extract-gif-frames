@@ -1,0 +1,25 @@
+{
+  "name": "libgif",
+  "version": "1.0.0",
+  "description": "Forked from the excelent jsgif project (https://github.com/shachaf/jsgif), which was implemented as a bookmarklet to manipulate animated gifs (http://slbkbs.org/jsgif).",
+  "main": "lib/index.js",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.7.0"
+  },
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yusukeshibata/libgif-js.git"
+  },
+  "author": "Yusuke Shibata <shibata@fata.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yusukeshibata/libgif-js/issues"
+  },
+  "homepage": "https://github.com/yusukeshibata/libgif-js#readme"
+}
