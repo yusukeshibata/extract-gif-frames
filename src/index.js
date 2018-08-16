@@ -1,6 +1,6 @@
 import { parseGIF, Stream } from './libgif'
 
-export default class GIFParser {
+class GIFParser {
   constructor(url) {
     this._url = url
     this._frames = []
@@ -122,4 +122,9 @@ export default class GIFParser {
     this._delay = gce.delayTime;
     this._disposalMethod = gce.disposalMethod;
   }
+}
+
+export default (url) => {
+  const parser = new GIFParser(url)
+  return parser.parse()
 }
