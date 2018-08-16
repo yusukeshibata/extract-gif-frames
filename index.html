@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <style>
+    canvas {
+      display: block;
+    }
+    </style>
+  </head>
+  <body>
+    <script src="https://unpkg.com/extract-gif-frames@1.0.3/index.js"></script>
+    <script>
+      extractGifFrames('./test.gif').then(function(frames) {
+        frames.forEach(function(frame) {
+          var canvas = document.createElement('canvas')
+          canvas.width = frame.data.width
+          canvas.height = frame.data.height
+          var ctx = canvas.getContext('2d')
+          ctx.putImageData(frame.data, 0, 0)
+          document.body.appendChild(canvas)
+        })
+      })
+    </script>
+  </body>
+</html>
