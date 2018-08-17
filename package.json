@@ -1,6 +1,6 @@
 {
   "name": "extract-gif-frames",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "extract gif frames using the excelent jsgif lib(https://github.com/buzzfeed/jsgif)",
   "main": "index.js",
   "devDependencies": {
@@ -13,7 +13,7 @@
     "webpack-cli": "^3.1.0"
   },
   "scripts": {
-    "build": "webpack --mode production src/index.js --output index.js",
+    "build": "webpack -d src/index.js --output index.js",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "gh-pages -d example"

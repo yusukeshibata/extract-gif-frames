@@ -63,7 +63,7 @@ class GIFParser {
         // Restore to previous
         // If we disposed every frame including first frame up to this point, then we have
         // no composited frame to restore to. In this case, restore to background instead.
-        if (this._disposalRestoreFromIdx !== null) {
+        if (this._disposalRestoreFromIdx !== undefined) {
           this._frame.putImageData(this._frames[this._disposalRestoreFromIdx].data, 0, 0);
         } else {
           this._frame.clearRect(this._lastImg.leftPos, this._lastImg.topPos, this._lastImg.width, this._lastImg.height);
