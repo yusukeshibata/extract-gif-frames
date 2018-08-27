@@ -188,9 +188,13 @@
         return output;
     };
 
-
+    const cancelState = []
+    export const cancelGIF = function(cancelId) {
+      cancelState[cancelId] = true
+    }
     // The actual parsing; returns an object with properties.
     export const parseGIF = function (st, handler) {
+        const cancelId = cancelState.length+1
         handler || (handler = {});
 
         // LZW (GIF-specific)
@@ -381,7 +385,10 @@
         var parseBlock = function () {
             var block = {};
             block.sentinel = st.readByte();
-
+            if(cancelState[cancelId]) {
+                console.log('cancelled:', cancelId);
+                return;
+            }
             switch (String.fromCharCode(block.sentinel)) { // For ease of matching
                 case '!':
                     block.type = 'ext';
@@ -408,4 +415,6 @@
         };
 
         parse();
+
+        return cancelId;
     };

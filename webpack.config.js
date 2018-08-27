@@ -4,7 +4,7 @@ module.exports = {
   devtool: 'source-map',
   entry: './src/index.js',
   output: {
-    library: 'extractGifFrames',
+    library: 'ExtractGifFrames',
     libraryTarget: 'umd',
     path: path.resolve('index.js')
   },

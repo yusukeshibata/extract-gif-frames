@@ -1,13 +1,17 @@
-import { parseGIF, Stream } from './libgif'
+import { cancelGIF, parseGIF, Stream } from './libgif'
+import EventEmitter from 'event-emitter'
 
-class GIFParser {
+module.exports = class GIFParser {
   constructor(url) {
     this._url = url
-    this._frames = []
+    this._currIdx = 0
+    this._emitter = new EventEmitter()
   }
-  parse() {
+  on(type, listener) {
+    this._emitter.on(type, listener)
+  }
+  load() {
     return new Promise((resolve, reject) => {
-      this._resolve = resolve
       try {
         const req = new XMLHttpRequest()
         req.open('GET', this._url, true)
@@ -16,13 +20,7 @@ class GIFParser {
         req.onload = evt => {
           const arrayBuffer = req.response
           const byteArray = new Uint8Array(arrayBuffer)
-          const stream = new Stream(byteArray)
-          parseGIF(stream, {
-            hdr: this.onHeader,
-            gce: this.onGCE,
-            img: this.onImg,
-            eof: this.onEOF
-          })
+          resolve(byteArray)
         }
         req.send()
       } catch(err) {
@@ -30,13 +28,27 @@ class GIFParser {
       }
     })
   }
+  cancel() {
+    cancelGIF(this._id)
+  }
+  parse() {
+    this.load().then(byteArray => {
+      const stream = new Stream(byteArray)
+      this._id = parseGIF(stream, {
+        hdr: this.onHeader,
+        gce: this.onGCE,
+        img: this.onImg,
+        eof: this.onEOF
+      })
+    })
+  }
   onEOF = () => {
     this.pushFrame()
-    this._resolve(this._frames)
+    this._emitter.emit('eof')
   }
   onImg = (img) => {
     if(!this._frame) this._frame = this._canvas.getContext('2d');
-    var currIdx = this._frames.length;
+    var currIdx = this._currIdx;
 
     //ct = color table, gct = global color table
     var ct = img.lctFlag ? img.lct : this._header.gct; // TODO: What if neither exists?
@@ -63,13 +75,13 @@ class GIFParser {
         // Restore to previous
         // If we disposed every frame including first frame up to this point, then we have
         // no composited frame to restore to. In this case, restore to background instead.
-        if (this._disposalRestoreFromIdx !== undefined) {
-          this._frame.putImageData(this._frames[this._disposalRestoreFromIdx].data, 0, 0);
+        if (this._disposalRestore !== undefined) {
+          this._frame.putImageData(this.__disposalRestore.data, 0, 0);
         } else {
           this._frame.clearRect(this._lastImg.leftPos, this._lastImg.topPos, this._lastImg.width, this._lastImg.height);
         }
       } else {
-        this._disposalRestoreFromIdx = currIdx - 1;
+        this._disposalRestoreFromIdx = this._lastFrame;
       }
 
       if (this._lastDisposalMethod === 2) {
@@ -105,13 +117,15 @@ class GIFParser {
     this._canvas = document.createElement('canvas')
     this._canvas.width = header.width
     this._canvas.height= header.height
+    this._emitter.emit('header', header)
   }
   pushFrame() {
     if(!this._frame) return;
-    this._frames.push({
+    this._emitter.emit('frame', {
       data: this._frame.getImageData(0, 0, this._header.width, this._header.height),
       delay: this._delay
-    });
+    }, this._currIdx);
+    this._currIdx++
   }
   onGCE = (gce) => {
     // pushFrame
@@ -122,9 +136,4 @@ class GIFParser {
     this._delay = gce.delayTime;
     this._disposalMethod = gce.disposalMethod;
   }
-}
-
-module.exports = (url) => {
-  const parser = new GIFParser(url)
-  return parser.parse()
 }
