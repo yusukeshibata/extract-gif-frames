@@ -13,6 +13,11 @@ module.exports = class GIFParser {
   load() {
     return new Promise((resolve, reject) => {
       try {
+        if(this._url instanceof ArrayBuffer) {
+          const byteArray = new Uint8Array(this._url)
+          resolve(byteArray)
+          return
+        }
         const req = new XMLHttpRequest()
         req.open('GET', this._url, true)
         req.responseType = 'arraybuffer'
@@ -38,9 +43,13 @@ module.exports = class GIFParser {
         hdr: this.onHeader,
         gce: this.onGCE,
         img: this.onImg,
-        eof: this.onEOF
+        eof: this.onEOF,
+        error: this.onError
       })
     })
+  }
+  onError = (error) => {
+    this._emitter.emit('error', error)
   }
   onEOF = () => {
     this.pushFrame()

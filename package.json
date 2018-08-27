@@ -1,6 +1,6 @@
 {
   "name": "extract-gif-frames",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "extract gif frames using the excelent jsgif lib(https://github.com/buzzfeed/jsgif)",
   "main": "index.js",
   "devDependencies": {

@@ -383,6 +383,7 @@
         };
 
         var parseBlock = function () {
+          try {
             var block = {};
             block.sentinel = st.readByte();
             if(cancelState[cancelId]) {
@@ -407,11 +408,18 @@
             }
 
             if (block.type !== 'eof') setTimeout(parseBlock, 0);
+          } catch(err) {
+            handler.error && handler.error(err);          
+          }
         };
 
         var parse = function () {
+          try {
             parseHeader();
             setTimeout(parseBlock, 0);
+          } catch(err) {
+            handler.error && handler.error(err);          
+          }
         };
 
         parse();
